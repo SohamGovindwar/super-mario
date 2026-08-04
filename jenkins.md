@@ -133,35 +133,22 @@ pipeline {
             }
         }
 
-        stage('Deploy To EKS') {
-            steps {
-
-                withCredentials([
-                    aws(
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        credentialsId: 'aws-cred',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
-                ]) {
-
-                    sh '''
-                    aws eks update-kubeconfig \
-                    --region ap-south-1 \
-                    --name EKS_CLOUD
-
-                    kubectl get nodes
-
-                    kubectl apply -f deployment.yaml
-
-                    kubectl apply -f service.yaml
-
-                    kubectl get pods
-
-                    kubectl get svc
-                    '''
-                }
-            }
+       stage( ' Deploy To EKS ' ) {
+    steps {
+        withCredentials([
+            aws( accessKeyVariable : ' AWS_ACCESS_KEY_ID ' , credentialsId : ' aws-cred ' , secretKeyVariable : ' AWS_SECRET_ACCESS_KEY ' )
+        ]) {
+            sh '''
+                aws eks update-kubeconfig --region ap-south-1 --name EKS_CLOUD
+                kubectl get nodes
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
+                kubectl get pods
+                kubectl get svc
+            '''
         }
+    }
+}
     }
 }
 ```
